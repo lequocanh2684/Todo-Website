@@ -3,6 +3,7 @@
 *@
 @{
 }
+@model IQueryable<Todo.Models.ToDo>
 <section class="vh-100" style="background-color: #eee;">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -28,7 +29,7 @@
                             </div>
                         </form>
 
-                        <table class="table mb-4">
+                        <table class="table mb-5">
                             <thead>
                                 <tr>
                                     <th scope="col">No.</th>
@@ -38,15 +39,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Buy groceries for next week</td>
-                                    <td>In progress</td>
-                                    <td>
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                        <button type="submit" class="btn btn-success ms-1">Finished</button>
-                                    </td>
-                                </tr>
+                                @*@foreach(var item in Model)
+                                {
+                                    <tr>
+                                        <th scope="row">@item.Id</th>
+                                        <td>@item.Title</td>
+                                        <td>@item.IsCompleted</td>
+                                        <th>@item.CreatedAt</th>
+                                        <td>@item.CompletedAt</td>
+
+                                        <td>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-success ms-1">Finished</button>
+                                        </td>
+                                    </tr>
+                                }*@
+                                
                                 <tr>
                                     <th scope="row">2</th>
                                     <td>Renew car insurance</td>

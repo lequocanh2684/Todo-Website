@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Todo.Models;
 namespace Todo.Data
 {
-	public class ToDoContext : DbContext
+	public class ToDoContext : IdentityDbContext
 	{
         public ToDoContext()
         {
