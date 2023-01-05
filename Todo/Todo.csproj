@@ -13,6 +13,8 @@
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Pomelo.EntityFrameworkCore.MySql" />
     <None Remove="Services\" />
+    <None Remove="Migrations\" />
+    <None Remove="DTO\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -34,5 +36,7 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="DTO\" />
   </ItemGroup>
 </Project>

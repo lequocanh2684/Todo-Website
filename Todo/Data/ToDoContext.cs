@@ -5,25 +5,17 @@ namespace Todo.Data
 {
 	public class ToDoContext : DbContext
 	{
-		
-		public ToDoContext(DbContextOptions options) : base(options)
-		{
+        public ToDoContext()
+        {
+        }
+
+        public ToDoContext(DbContextOptions options) : base(options)
+        {
 		}
 
-		public DbSet<ToDo> Todo { get; set; }
+		public DbSet<ToDo> ToDoList { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ToDo>(entity => entity.HasKey(e => e.Id));
-
-        }
+        public DbSet<User> User { get; set; }
     }
 }
 
