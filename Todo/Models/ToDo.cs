@@ -9,9 +9,6 @@ namespace Todo.Models
 
 		bool IsCompleted { get; set; }
 
-		public ToDo()
-		{
-		}
 	}
 }
 
