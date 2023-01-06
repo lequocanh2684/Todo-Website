@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo.Data;
 using Todo.Models;
+using Todo.Forms;
 using Todo.DTO;
 namespace Todo.Services
 {
@@ -12,12 +13,12 @@ namespace Todo.Services
 			_context = context;
 		}
 
-		public async Task<List<ToDoDTO>?> GetListToDo(Guid userId)
+		public async Task<List<ToDoDTO>?> GetListToDo(string userId)
 		{
 			try
 			{
-				var toDoList = await _context.ToDoList.Where(todo => todo.UserId == userId).ToListAsync();
-				return MapToDTO(toDoList);
+				var toDoList = await _context.ToDoList.Where(todo => todo.UserId == userId && !todo.IsDeleted).ToListAsync();
+				return MapToDTOList(toDoList);
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -25,14 +26,14 @@ namespace Todo.Services
 			}
         }
 
-		public async Task AddNewToDo(ToDoDTO toDoDTO, Guid userId)
+		public async Task AddNewToDo(ToDoForm toDoForm, string userId)
 		{
 			try
 			{ 
 					var toDo = new ToDo()
 					{
-						Title = toDoDTO.Title,
-						IsCompleted = toDoDTO.IsCompleted,
+						Title = toDoForm.Title,
+						IsCompleted = toDoForm.IsCompleted,
 						CreatedAt = DateTime.Now,
 						DeletedAt = null,
 						CompletedAt = null,
@@ -47,19 +48,22 @@ namespace Todo.Services
 			}
 		}
 
-		public async Task EditExistToDo(ToDoDTO newToDo, Guid toDoId)
+		public async Task EditExistToDo(ToDoForm toDoForm, Guid toDoId)
 		{
 			try
 			{
-					var oldToDo = _context.ToDoList.Find(toDoId);
-					if (oldToDo != null)
+				var oldToDo = _context.ToDoList.Find(toDoId);
+				if (oldToDo != null)
+				{
+					oldToDo.Title = toDoForm.Title;
+					oldToDo.IsCompleted = toDoForm.IsCompleted;
+					if (oldToDo.IsCompleted)
 					{
-						oldToDo.Title = newToDo.Title;
-						oldToDo.IsCompleted = newToDo.IsCompleted;
 						oldToDo.CompletedAt = DateTime.Now;
-						_context.ToDoList.Update(oldToDo);
 					}
-					await _context.SaveChangesAsync();
+					_context.ToDoList.Update(oldToDo);
+				}
+				await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -84,7 +88,20 @@ namespace Todo.Services
 			}
 		}
 
-		private List<ToDoDTO> MapToDTO(List<ToDo> toDoList)
+		public async Task<ToDoDTO>? FindToDo(Guid toDoId)
+		{
+			try
+			{
+				var toDo = await _context.ToDoList.FindAsync(toDoId);
+				return new ToDoDTO(toDo);
+			}catch(Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return null;
+			}
+		}
+
+		private List<ToDoDTO> MapToDTOList(List<ToDo> toDoList)
 		{
 			var toDoDTOList = new List<ToDoDTO>();
 			foreach(var toDo in toDoList)

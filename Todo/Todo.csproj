@@ -15,6 +15,7 @@
     <None Remove="Services\" />
     <None Remove="Migrations\" />
     <None Remove="DTO\" />
+    <None Remove="Forms\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -44,5 +45,6 @@
     <Folder Include="Services\" />
     <Folder Include="Migrations\" />
     <Folder Include="DTO\" />
+    <Folder Include="Forms\" />
   </ItemGroup>
 </Project>
