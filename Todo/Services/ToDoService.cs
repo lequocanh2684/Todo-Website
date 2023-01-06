@@ -1,22 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo.Data;
 using Todo.Models;
+using Todo.Forms;
 using Todo.DTO;
 namespace Todo.Services
 {
-    public class ToDoService
+    public class ToDoService : IToDoService
 	{
-		public ToDoService()
+		private readonly ToDoContext _context;
+		public ToDoService(ToDoContext context)
 		{
+			_context = context;
 		}
 
-		public async Task<List<ToDoDTO>?> GetListToDo(Guid userId)
+		public async Task<List<ToDoDTO>?> GetListToDo(string userId)
 		{
 			try
 			{
-				using var context = new ToDoContext();
-				var toDoList = await context.ToDoList.Where(todo => todo.UserId == userId).ToListAsync();
-				return MapToDTO(toDoList);
+				var toDoList = await _context.ToDoList.Where(todo => todo.UserId == userId && !todo.IsDeleted).ToListAsync();
+				return MapToDTOList(toDoList);
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -24,47 +26,44 @@ namespace Todo.Services
 			}
         }
 
-		public async Task AddNewToDo(ToDoDTO toDoDTO, Guid userId)
+		public async Task AddNewToDo(ToDoForm toDoForm, string userId)
 		{
 			try
-			{
-				using (var context = new ToDoContext())
-				{
+			{ 
 					var toDo = new ToDo()
 					{
-						Title = toDoDTO.Title,
-						IsCompleted = toDoDTO.IsCompleted,
+						Title = toDoForm.Title,
+						IsCompleted = toDoForm.IsCompleted,
 						CreatedAt = DateTime.Now,
 						DeletedAt = null,
 						CompletedAt = null,
 						IsDeleted = false,
 						UserId = userId
 					};
-					context.ToDoList.Add(toDo);
-					await context.SaveChangesAsync();
-				}
+					_context.ToDoList.Add(toDo);
+					await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
 			}
 		}
 
-		public async Task EditExistToDo(ToDoDTO newToDo, Guid toDoId)
+		public async Task EditExistToDo(ToDoForm toDoForm, Guid toDoId)
 		{
 			try
 			{
-				using (var context = new ToDoContext())
+				var oldToDo = _context.ToDoList.Find(toDoId);
+				if (oldToDo != null)
 				{
-					var oldToDo = context.ToDoList.Find(toDoId);
-					if (oldToDo != null)
+					oldToDo.Title = toDoForm.Title;
+					oldToDo.IsCompleted = toDoForm.IsCompleted;
+					if (oldToDo.IsCompleted)
 					{
-						oldToDo.Title = newToDo.Title;
-						oldToDo.IsCompleted = newToDo.IsCompleted;
 						oldToDo.CompletedAt = DateTime.Now;
-						context.ToDoList.Update(oldToDo);
 					}
-					await context.SaveChangesAsync();
+					_context.ToDoList.Update(oldToDo);
 				}
+				await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -75,22 +74,34 @@ namespace Todo.Services
 		{
 			try
 			{
-				using var context = new ToDoContext();
-				var toDoDelete = context.ToDoList.Where(toDo => toDo.Id == toDoId).FirstOrDefault();
+				var toDoDelete = _context.ToDoList.Where(toDo => toDo.Id == toDoId).FirstOrDefault();
 				if (toDoDelete != null)
 				{
 					toDoDelete.IsDeleted = true;
 					toDoDelete.DeletedAt = DateTime.Now;
-					context.ToDoList.Update(toDoDelete);
+					_context.ToDoList.Update(toDoDelete);
 				}
-				await context.SaveChangesAsync();
+				await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
 			}
 		}
 
-		private List<ToDoDTO> MapToDTO(List<ToDo> toDoList)
+		public async Task<ToDoDTO>? FindToDo(Guid toDoId)
+		{
+			try
+			{
+				var toDo = await _context.ToDoList.FindAsync(toDoId);
+				return new ToDoDTO(toDo);
+			}catch(Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return null;
+			}
+		}
+
+		private List<ToDoDTO> MapToDTOList(List<ToDo> toDoList)
 		{
 			var toDoDTOList = new List<ToDoDTO>();
 			foreach(var toDo in toDoList)

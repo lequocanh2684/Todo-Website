@@ -22,7 +22,7 @@ namespace Todo.Models
 
 		public DateTime? DeletedAt { get; set; }
 
-		public Guid UserId { get; set; }
+		public string? UserId { get; set; }
 	}
 }
 

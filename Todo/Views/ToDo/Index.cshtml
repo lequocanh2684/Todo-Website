@@ -3,7 +3,7 @@
 *@
 @{
 }
-@model IQueryable<Todo.Models.ToDo>
+@model IEnumerable<Todo.DTO.ToDoDTO>
 <section class="vh-100" style="background-color: #eee;">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -39,21 +39,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @*@foreach(var item in Model)
+                                @foreach(var item in Model)
                                 {
                                     <tr>
                                         <th scope="row">@item.Id</th>
                                         <td>@item.Title</td>
                                         <td>@item.IsCompleted</td>
-                                        <th>@item.CreatedAt</th>
-                                        <td>@item.CompletedAt</td>
+                                       
 
                                         <td>
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                             <button type="submit" class="btn btn-success ms-1">Finished</button>
                                         </td>
                                     </tr>
-                                }*@
+                                }
                                 
                                 <tr>
                                     <th scope="row">2</th>
