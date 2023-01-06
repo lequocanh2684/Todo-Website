@@ -4,18 +4,19 @@ using Todo.Models;
 using Todo.DTO;
 namespace Todo.Services
 {
-    public class ToDoService
+    public class ToDoService : IToDoService
 	{
-		public ToDoService()
+		private readonly ToDoContext _context;
+		public ToDoService(ToDoContext context)
 		{
+			_context = context;
 		}
 
 		public async Task<List<ToDoDTO>?> GetListToDo(Guid userId)
 		{
 			try
 			{
-				using var context = new ToDoContext();
-				var toDoList = await context.ToDoList.Where(todo => todo.UserId == userId).ToListAsync();
+				var toDoList = await _context.ToDoList.Where(todo => todo.UserId == userId).ToListAsync();
 				return MapToDTO(toDoList);
 			}catch(Exception ex)
 			{
@@ -27,9 +28,7 @@ namespace Todo.Services
 		public async Task AddNewToDo(ToDoDTO toDoDTO, Guid userId)
 		{
 			try
-			{
-				using (var context = new ToDoContext())
-				{
+			{ 
 					var toDo = new ToDo()
 					{
 						Title = toDoDTO.Title,
@@ -40,9 +39,8 @@ namespace Todo.Services
 						IsDeleted = false,
 						UserId = userId
 					};
-					context.ToDoList.Add(toDo);
-					await context.SaveChangesAsync();
-				}
+					_context.ToDoList.Add(toDo);
+					await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -53,18 +51,15 @@ namespace Todo.Services
 		{
 			try
 			{
-				using (var context = new ToDoContext())
-				{
-					var oldToDo = context.ToDoList.Find(toDoId);
+					var oldToDo = _context.ToDoList.Find(toDoId);
 					if (oldToDo != null)
 					{
 						oldToDo.Title = newToDo.Title;
 						oldToDo.IsCompleted = newToDo.IsCompleted;
 						oldToDo.CompletedAt = DateTime.Now;
-						context.ToDoList.Update(oldToDo);
+						_context.ToDoList.Update(oldToDo);
 					}
-					await context.SaveChangesAsync();
-				}
+					await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -75,15 +70,14 @@ namespace Todo.Services
 		{
 			try
 			{
-				using var context = new ToDoContext();
-				var toDoDelete = context.ToDoList.Where(toDo => toDo.Id == toDoId).FirstOrDefault();
+				var toDoDelete = _context.ToDoList.Where(toDo => toDo.Id == toDoId).FirstOrDefault();
 				if (toDoDelete != null)
 				{
 					toDoDelete.IsDeleted = true;
 					toDoDelete.DeletedAt = DateTime.Now;
-					context.ToDoList.Update(toDoDelete);
+					_context.ToDoList.Update(toDoDelete);
 				}
-				await context.SaveChangesAsync();
+				await _context.SaveChangesAsync();
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);

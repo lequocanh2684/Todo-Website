@@ -7,6 +7,9 @@
     <UserSecretsId>aspnet-Todo-61ed6cb5-6547-40a4-a28d-50e7ac51cb1e</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Microsoft.EntityFrameworkCore" />
     <None Remove="MySql.EntityFrameworkCore" />
@@ -15,6 +18,7 @@
     <None Remove="Services\" />
     <None Remove="Migrations\" />
     <None Remove="DTO\" />
+    <None Remove="Auth0.AspNetCore.Authentication" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -32,6 +36,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.7" />
+    <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
