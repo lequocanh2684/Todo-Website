@@ -48,7 +48,7 @@ namespace Todo.Services
 			}
 		}
 
-		public async Task EditExistToDo(ToDoForm toDoForm, Guid toDoId)
+		public async Task EditExistToDo(ToDoDTO toDoForm, Guid toDoId)
 		{
 			try
 			{

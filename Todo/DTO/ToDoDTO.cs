@@ -12,6 +12,7 @@ namespace Todo.DTO
 
 		public ToDoDTO(ToDo toDo)
 		{
+			Id = toDo.Id;
 			Title = toDo.Title;
 			IsCompleted = toDo.IsCompleted;
 		}
