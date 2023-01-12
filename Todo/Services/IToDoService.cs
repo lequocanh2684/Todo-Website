@@ -1,6 +1,7 @@
 ﻿using System;
 using Todo.Forms;
 using Todo.DTO;
+using Todo.Models;
 
 namespace Todo.Services
 {
@@ -14,7 +15,7 @@ namespace Todo.Services
 
         Task DeleteToDo(Guid toDoId);
 
-        Task<ToDoDTO> FindToDo(Guid toDoId);
+        Task<ToDoDTO>? FindToDo(Guid toDoId);
     }
 }
 

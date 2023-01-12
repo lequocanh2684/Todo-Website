@@ -1,4 +1,4 @@
-﻿@model Task<Todo.DTO.ToDoDTO>
+﻿@model Todo.DTO.ToDoDTO
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,15 +12,15 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.Result.Id"/>
+            <input type="hidden" asp-for="@Model.Id"/>
             <div class="form-group">
-                <label asp-for="@Model.Result.Title" class="control-label"></label>
-                <input asp-for="@Model.Result.Title" class="form-control" />
-                <span asp-validation-for="@Model.Result.Title" class="text-danger"></span>
+                <label asp-for="@Model.Title" class="control-label"></label>
+                <input asp-for="@Model.Title" class="form-control" />
+                <span asp-validation-for="@Model.Title" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="@Model.Result.IsCompleted" /> @Html.DisplayNameFor(model => model.Result.IsCompleted)
+                    <input class="form-check-input" asp-for="@Model.IsCompleted" /> @Html.DisplayNameFor(model => model.IsCompleted)
                 </label>
             </div>
             <div class="form-group">
