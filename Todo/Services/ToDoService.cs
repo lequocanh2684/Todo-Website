@@ -48,15 +48,15 @@ namespace Todo.Services
 			}
 		}
 
-		public async Task EditExistToDo(ToDoDTO toDoForm, Guid toDoId)
+		public async Task EditExistToDo(ToDoDTO toDoDTO, Guid toDoId)
 		{
 			try
 			{
 				var oldToDo = _context.ToDoList.Find(toDoId);
 				if (oldToDo != null)
 				{
-					oldToDo.Title = toDoForm.Title;
-					oldToDo.IsCompleted = toDoForm.IsCompleted;
+                    oldToDo.Title = toDoDTO.Title;
+					oldToDo.IsCompleted = toDoDTO.IsCompleted;
 					if (oldToDo.IsCompleted)
 					{
 						oldToDo.CompletedAt = DateTime.Now;
@@ -88,7 +88,7 @@ namespace Todo.Services
 			}
 		}
 
-		public async Task<ToDoDTO>? FindToDo(Guid toDoId)
+		public async Task<ToDoDTO?> FindToDo(Guid toDoId)
 		{
 			try
 			{

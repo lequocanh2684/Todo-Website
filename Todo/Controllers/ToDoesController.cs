@@ -34,7 +34,7 @@ namespace Todo.Controllers
         // GET: ToDoes/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null || _toDoService.GetListToDo(_identityUser.GetUserId(User)) == null)
+            if (_toDoService.GetListToDo(_identityUser.GetUserId(User)) == null)
             {
                 return NotFound();
             }
@@ -64,7 +64,7 @@ namespace Todo.Controllers
             if (ModelState.IsValid)
             {
                 string id = _identityUser.GetUserId(User);
-                _toDoService.AddNewToDo(toDoForm, id);
+                await _toDoService.AddNewToDo(toDoForm, id);
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
@@ -74,16 +74,11 @@ namespace Todo.Controllers
         // GET: ToDoes/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var toDo = _toDoService.FindToDo(id);
+            var toDo = _toDoService.FindToDo(id).Result;
             if (toDo == null)
             {
                 return NotFound();
             }
-
             return View(toDo);
         }
 
@@ -92,13 +87,13 @@ namespace Todo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]  
-        public async Task<IActionResult> EditToDo(ToDoDTO toDo, Guid id)
+        public async Task<IActionResult> EditToDo(ToDoDTO toDoDTO, Guid id)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _toDoService.EditExistToDo(toDo, id);
+                    await _toDoService.EditExistToDo(toDoDTO, id);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -119,10 +114,6 @@ namespace Todo.Controllers
         // GET: ToDoes/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             var toDo = _toDoService.FindToDo(id);
             if (toDo == null)
             {
@@ -144,9 +135,13 @@ namespace Todo.Controllers
             var toDo = await _toDoService.FindToDo(id);
             if (toDo != null)
             {
-                _toDoService.DeleteToDo(id);
+                await _toDoService.DeleteToDo(id);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public class Bind
+        {
         }
 
         /*private bool ToDoExists(Guid id)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Todo.Models
 {
-    [Table("todo")]
+	[Table("todo")]
 	public class ToDo
 	{
 		[Key]
