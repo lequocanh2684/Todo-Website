@@ -55,7 +55,8 @@ namespace Todo.Services
 				var oldToDo = _context.ToDoList.Find(toDoId);
 				if (oldToDo != null)
 				{
-                    oldToDo.Title = toDoDTO.Title;
+
+          oldToDo.Title = toDoDTO.Title;
 					oldToDo.IsCompleted = toDoDTO.IsCompleted;
 					if (oldToDo.IsCompleted)
 					{

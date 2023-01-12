@@ -74,11 +74,13 @@ namespace Todo.Controllers
         // GET: ToDoes/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
+
             var toDo = _toDoService.FindToDo(id).Result;
             if (toDo == null)
             {
                 return NotFound();
             }
+
             return View(toDo);
         }
 
@@ -139,11 +141,6 @@ namespace Todo.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-        public class Bind
-        {
-        }
-
         /*private bool ToDoExists(Guid id)
         {
             if(_toDoService.FindToDo(id) != null)
