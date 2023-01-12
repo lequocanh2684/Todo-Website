@@ -10,7 +10,7 @@ namespace Todo.Services
 
         Task AddNewToDo(ToDoForm toDoForm, string userId);
 
-        Task EditExistToDo(ToDoForm toDoForm, Guid toDoId);
+        Task EditExistToDo(ToDoDTO toDoForm, Guid toDoId);
 
         Task DeleteToDo(Guid toDoId);
 
