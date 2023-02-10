@@ -14,7 +14,7 @@ namespace Todo.Data
         {
 		}
 
-		public DbSet<ToDo>? ToDoList { get; set; }
+		public virtual DbSet<ToDo>? ToDoList { get; set; }
     }
 }
 

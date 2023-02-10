@@ -3,14 +3,18 @@ using Todo.Data;
 using Todo.Models;
 using Todo.Forms;
 using Todo.DTO;
+using AutoMapper;
+
 namespace Todo.Services
 {
     public class ToDoService : IToDoService
 	{
 		private readonly ToDoContext _context;
-		public ToDoService(ToDoContext context)
+		private readonly IMapper _mapper;
+		public ToDoService(ToDoContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 
 		public async Task<List<ToDoDTO>?> GetListToDo(string userId)
@@ -18,7 +22,9 @@ namespace Todo.Services
 			try
 			{
 				var toDoList = await _context.ToDoList.Where(todo => todo.UserId == userId && !todo.IsDeleted).ToListAsync();
-				return MapToDTOList(toDoList);
+
+				//var toDoList = (from todo in _context.ToDoList where todo.UserId == userId where !todo.IsDeleted select todo).ToList();
+				return _mapper.Map<List<ToDoDTO>>(toDoList);
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
@@ -92,23 +98,13 @@ namespace Todo.Services
 		{
 			try
 			{
-				var toDo = await _context.ToDoList.FindAsync(toDoId);
-				return new ToDoDTO(toDo);
+				var toDo = _mapper.Map<ToDoDTO>(await _context.ToDoList.FindAsync(toDoId));
+				return toDo;
 			}catch(Exception ex)
 			{
 				Console.WriteLine(ex.Message);
 				return null;
 			}
-		}
-
-		private List<ToDoDTO> MapToDTOList(List<ToDo> toDoList)
-		{
-			var toDoDTOList = new List<ToDoDTO>();
-			foreach(var toDo in toDoList)
-			{
-				toDoDTOList.Add(new ToDoDTO(toDo));
-			}
-			return toDoDTOList;
 		}
 	}
 }

@@ -18,6 +18,6 @@ namespace Todo.DTO
 		}
 
 		public ToDoDTO() { }
-    }
+	}
 }
 

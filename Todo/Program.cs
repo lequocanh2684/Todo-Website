@@ -3,11 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Auth0.AspNetCore.Authentication;
 using Todo.Data;
+using Todo.DTO;
+using Todo.Models;
 using Todo.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,7 @@ builder.Services.AddDbContext<ToDoContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSingleton<IDesignTimeServices, MysqlEntityFrameworkDesignTimeServices>();
 builder.Services.AddScoped<IToDoService, ToDoService>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ToDoContext>();
@@ -81,6 +85,15 @@ builder.Services.AddControllersWithViews();
 //            }
 //        };
 //    });
+
+var configuration = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<ToDo, ToDoDTO>();
+});
+// only during development, validate your mappings; remove it before release
+#if DEBUG
+configuration.AssertConfigurationIsValid();
+#endif
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
